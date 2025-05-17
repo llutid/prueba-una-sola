@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Llutid+</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #121212;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            font-size: 16px;
+        }
+
+        /* Pantalla de inicio */
+        .intro-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #00bfff;
+            opacity: 0;
+            animation: aparecer 2s ease forwards, desaparecer 1s ease forwards 4s;
+            text-shadow: 0 0 10px #00bfff88, 0 0 20px #00bfff44;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 4px;
+        }
+
+        .logo-container span {
+            color: white;
+        }
+
+        @keyframes aparecer {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes desaparecer {
+            to {
+                opacity: 0;
+                transform: scale(1.05);
+            }
+        }
+
+        /* Main content */
+        .main-content {
+            display: none;
+            padding-top: 20px;
+        }
+
+        /* Barra fija */
+        .sticky-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(18, 18, 18, 0.8);
+            padding: 15px 20px;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0, 191, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-bar h1 {
+            font-size: 2.5rem;
+            color: #00bfff;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 5px;
+            margin-bottom: 0;
+            margin-right: 20px;
+        }
+
+        .logo-bar h1 span {
+            color: white;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .sticky-bar input {
+            padding: 12px 20px;
+            width: 200px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 2px solid #4e5d6a;
+            outline: none;
+            background-color: #2a2a2a;
+            color: white;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .sticky-bar input:focus {
+            border-color: #00bfff;
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
+        }
+
+        .sticky-bar input::placeholder {
+            color: #888;
+        }
+
+        /* Icono del menú */
+        .menu-icon {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 22px;
+            cursor: pointer;
+        }
+
+        .menu-icon div {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Menú desplegable */
+        .menu-dropdown {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: rgba(18, 18, 18, 0.9);
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(5px);
+            box-shadow: -8px 8px 10px rgba(0, 191, 255, 0.2);
+            z-index: 101;
+            border-radius: 5px;
+        }
+
+        .menu-dropdown a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            text-align: center;
+            display: block;
+        }
+
+        .menu-dropdown a:hover {
+            color: #00bfff;
+        }
+
+        /* Carrusel */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border-bottom: 5px solid #555;
+        }
+
+        .slider {
+            display: flex;
+            width: 300%;
+            animation: slide 30s infinite;
+        }
+
+        .slider img {
+            width: 33.33%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            33% { transform: translateX(-100%); }
+            66% { transform: translateX(-200%); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Estilos para el Top 10 */
+        .top-10-container {
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #555;
+        }
+
+        .top-10-container h2 {
+            color: #00bfff;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 15px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .top-10-container h2 span {
+            color: white; /* Estilo para el "+" en el título */
+        }
+
+        .top-10-list {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 15px;
+        }
+
+        .top-10-list .movie-top-10 {
+            background-color: #3a3a3a;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+            width: 150px;
+            flex-shrink: 0;
+        }
+
+        .top-10-list .movie-top-10:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.3);
+        }
+
+        .movie-top-10-image-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .movie-top-10-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .top-10-badge {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #1E90FF; /* Azul intermedio (Dodger Blue) */
+            color: white;
+            text-align: center;
+            padding: 5px 0;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .top-10-list .movie-top-10 p {
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #d3d3d3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .top-10-list .movie-top-10 a {
+            text-decoration: none;
+        }
+
+        /* Películas */
+        .movie-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .movie {
+            background-color: #3a3a3a;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+        }
+
+        .movie:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.3);
+        }
+
+        .movie img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .movie p {
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #d3d3d3;
+        }
+
+        .movie a {
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sticky-bar input {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sticky-bar {
+                padding: 10px 15px;
+            }
+
+            .logo-bar h1 {
+                font-size: 2rem;
+                margin-right: 10px;
+            }
+
+            .sticky-bar input {
+                width: 120px;
+                font-size: 14px;
+                padding: 8px 10px;
+                margin-right: 5px;
+            }
+
+            .menu-icon {
+                width: 25px;
+                height: 18px;
+            }
+
+            .menu-dropdown {
+                top: 50px;
+                right: 15px;
+                padding: 15px;
+                gap: 10px;
+            }
+
+            .menu-dropdown a {
+                font-size: 1rem;
+            }
+
+            .slider-container {
+                height: 250px;
+            }
+
+            .movie-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .movie p {
+                font-size: 14px;
+            }
+
+            .top-10-container h2 {
+                font-size: 1.5rem;
+            }
+
+            .top-10-list .movie-top-10 {
+                width: 120px;
+            }
+
+            .top-10-list .movie-top-10 img {
+                height: 160px;
+            }
+
+            .top-10-list .movie-top-10 p {
+                font-size: 12px;
+            }
+
+            .top-10-badge {
+                font-size: 0.8rem;
+                padding: 3px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="intro-screen">
+        <div class="logo-container">Llutid<span>+</span></div>
+    </div>
+
+    <div class="main-content">
+
+        <div class="sticky-bar">
+            <div class="logo-bar">
+                <h1>Llutid<span>+</span></h1>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Buscar película..." onkeyup="buscarPelicula()">
+                <div class="menu-icon" onclick="toggleMenu()">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-dropdown" id="menuDropdown">
+            <a href="home.html">HOME</a>
+            <a href="recientemente_agregado.html">RECIEN AGREGADO</a>
+            <a href="proximasenlanzamiento.html">PROXIMAS EN LANZAMIENTO</a>
+            <a href="envivo.html">EN VIVO STREAMING DE NUEVAS LANZAMIENTOS</a>
+        </div>
+
+        <div class="slider-container">
+            <div class="slider">
+                <img src="https://i.postimg.cc/FHxXMQSq/result-LLUTID-FONDO.jpg" alt="Anuncio 1">
+                <img src="https://i.postimg.cc/9QbHgCPg/result-llutid-cine-streaming.png">
+                <img src="https://i.postimg.cc/JhRz9q2r/result-Black-White-Bold-Movie-Night-Landscape-Banner.png">
+                <img src="https://i.postimg.cc/V5yCMtLJ/result-Portada-para-P-gina-de-Facebook-de-Cine-al-Aire-Libre-con-Foto-Retro.png" alt="Anuncio 1">
+                <img src="https://i.postimg.cc/9QbHgCPg/result-llutid-cine-streaming.png">
+                <img src="https://i.postimg.cc/JhRz9q2r/result-Black-White-Bold-Movie-Night-Landscape-Banner.png">
+                <img src="https://i.postimg.cc/V5yCMtLJ/result-Portada-para-P-gina-de-Facebook-de-Cine-al-Aire-Libre-con-Foto-Retro.png">
+                <img src="https://i.postimg.cc/FHxXMQSq/result-LLUTID-FONDO.jpg">
+            </div>
+        </div>
+
+        <div class="top-10-container">
+            <h2>Top 10 Películas Llutid<span>+</span></h2><div class="top-10-list" id="top-10-list">
+                <div class="movie-top-10">
+                    <a href="larazondeestarcontico2.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/J46hQBmd/la-razon-2.png" alt="LA RAZON DE ESTAR CONTIGO 2">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>LA RAZON DE ESTAR CONTIGO 2</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="lapasiondecristo.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/T1VgLD5J/result-la-pasion-de-cristo.jpg" alt="THE PASSION">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>THE PASSION</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="pata de guerra.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/3rj42RdP/en-pie-de-guerra.png" alt="EN PIE PATA ">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>EN PIE PATA DE GUERRA</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="ungranchico.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/tCYbpvQ2/un-gran-chico.png" alt="UN GRAN CHICO">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>UN GRAN CHICO</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="terrifer1.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/GpYhr7DZ/terrifer-1.png" alt="TERRIFER">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>TERIFER</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="laexorcista.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/C5vwJWyf/la-exorcista.png" alt="LA EXORCISTA">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>LA EXORCISTA</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="encanto.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/QCnrc15Q/encanto.png" alt="LA EXORCISTA">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>ENCANTO</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="ole.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/J0D3jpwP/ole-viaje-de-ferdinad.png" alt="ENCANTO">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>OLE</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="stuby.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/0Q3DzHjP/sgt-stuby.png" alt="OLE">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>SARGENTO STUBBY</p>
+                    </a>
+                </div>
+                <div class="movie-top-10">
+                    <a href="intensamente2.html">
+                        <div class="movie-top-10-image-container">
+                            <img src="https://i.postimg.cc/DfH1cd7w/o3413284-16754682.png" alt="SARGENTO STUBY">
+                            <div class="top-10-badge">Top 10</div>
+                        </div>
+                        <p>INTENSAMENTE 2</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-container" id="movie-container">
+            </div>
+
+        <script>
+            // Mostrar contenido después de 5 segundos (ajuste para la animación)
+            setTimeout(() => {
+                document.querySelector('.intro-screen').style.display = 'none';
+                document.querySelector('.main-content').style.display = 'block';
+            }, 5000);
+
+            const peliculasOriginales = [
+                { title: "Intensamente 2", image: "https://i.postimg.cc/DfH1cd7w/o3413284-16754682.png", link: "intensamente2.html" },
+                { title: "Las Rubias", image: "https://i.postimg.cc/rsrWDzWH/rubias.png", link: "dondeestanlasrubias.html" },
+                { title: "Virus", image: "https://i.postimg.cc/Pfg1hc0M/virus.png", link: "virus.html" },
+                { title: "Olé, El Viaje de Ferdinand", image: "https://i.postimg.cc/J0D3jpwP/ole-viaje-de-ferdinad.png", link: "ole.html" },
+                { title: "Sgt. Stubby", image: "https://i.postimg.cc/0Q3DzHjP/sgt-stuby.png", link: "stuby.html" },
+                { title: "Un Don Excepcional", image: "https://i.postimg.cc/WzWKqVrt/un-don-exepcional.png", link: "undonexepcional.html" },
+                { title: "En Pie de Guerra", image: "https://i.postimg.cc/3rj42RdP/en-pie-de-guerra.png", link: "pata de guerra.html" },
+                { title: "Tiburón Toro 2", image: "https://i.postimg.cc/K8j1XDJ2/tiburon-toro-2.png", link: "tiburontoro.html" },
+                { title: "La Razón de Estar Contigo 1", image: "https://i.postimg.cc/Y2x0hsP7/la-razon-1.png", link: "larazondeestarcontigo.html" },
+                { title: "La Razón de Estar Contigo 2", image: "https://i.postimg.cc/J46hQBmd/la-razon-2.png", link: "larazondeestarcontico2.html" },
+                { title: "Terrifer 1", image: "https://i.postimg.cc/GpYhr7DZ/terrifer-1.png", link: "terrifer1.html" },
+                { title: "La Exorcista", image: "https://i.postimg.cc/C5vwJWyf/la-exorcista.png", link: "laexorcista.html" },
+                { title: "EL Retador", image: "https://i.postimg.cc/XvDqpjSG/result-el-retador.jpg", link: "elretador.html" },
+                { title: "El Paseo 5", image: "https://i.postimg.cc/Qdmv7p3H/paseo-5.png", link: "elpaseo5.html" },
+                { title: "El Paseo 6", image: "https://i.postimg.cc/6ptyPbf3/result-el-paseo-6.png", link: "elpaseo6.html" },
+                { title: "El Paseo 7", image: "https://i.postimg.cc/5ttTS64p/paseo-7.png", link: "elpaseo7.html" },
+                { title: "vals", image: "https://i.postimg.cc/15xgG3gD/result-vals.jpg", link: "vals.html" },
+                { title: "Dios Cambió su Vida", image: "https://i.postimg.cc/BQshCXND/dios-cambio-su-vida.png", link: "dioscambiosuvidaparasiempre.html" },
+                { title: "la pasion de cristo", image: "https://i.postimg.cc/T1VgLD5J/result-la-pasion-de-cristo.jpg ", link: "lapasiondecristo.html" },
+                { title: "Encanto", image: "https://i.postimg.cc/QCnrc15Q/encanto.png", link: "encanto.html" },
+                { title: "Un Gran Chico", image: "https://i.postimg.cc/tCYbpvQ2/un-gran-chico.png", link: "ungranchico.html" },
+                { title: "Camp Cool Kids", image: "https://i.postimg.cc/0ySqJ6NS/camp-cool-kids.png", link: "campamentocoolkids.html" },
+                { title: "El robo perfecto", image: "https://i.postimg.cc/BQC2J20q/result-el-robo-perfecto.png", link: "elroboperfecto.html" },
+                { title: "El Gran Asalto", image: "https://i.postimg.cc/fL84hm8G/asalto-al-furgon.png", link: "asaltoalfurgon.html" },
+                { title: "Patos", image: "https://i.postimg.cc/66GsP2dm/patos.png", link: "patos.html" },
+                { title: "Viaje Mágico", image: "https://i.postimg.cc/0j4LzxRZ/fautland.png", link: "fautland.html" },
+                { title: "Hacker", image: "https://i.postimg.cc/zXLs9LKQ/hacker.png", link: "hacker.html" },
+                { title: "Reveldes a Los 16", image: "https://i.postimg.cc/g2snbygK/result-reveldes-a-los-16.jpg", link: "reveldesalos16.html" },
+                { title: "Hombre Araña", image: "https://i.postimg.cc/GtnXV2CW/hombre-ara-a.png", link: "hombrearaña2.html" },
+                { title: "Perro Rokero 2", image: "https://i.postimg.cc/tJ8MX5WM/perro-rokero-2.png", link: "perrorokero2.html" },
+                { title: "El Voto", image: "https://i.postimg.cc/V6gwL3kH/el-voto.png", link: "elvoto.html" },
+                { title: "Instakiller", image: "https://i.postimg.cc/J4nrt4J3/instakiller.png", link: "instakiller.html" },
+                { title: "Leny", image: "https://i.postimg.cc/7LvwB3RX/leny.png", link: "leny.html" },
+                { title: "2 Tontos", image: "https://i.postimg.cc/yNFB2J4K/2-tontos.png", link: "2tontos.html" },
+                { title: "It 2", image: "https://i.postimg.cc/2SrP30gs/payaso-it.png", link: "payasoit.html" },
+                { title: "Desastre: La Película", image: "https://i.postimg.cc/7YyRQBP5/desastre-pelicula.png", link: "desastredelapelicula.html" }
+                
+              ];
+
+            // Función para mostrar las películas
+            function mostrarPeliculas(peliculas) {
+                const container = document.getElementById('movie-container');
+                container.innerHTML = ''; // Limpiar el contenedor
+
+                peliculas.forEach(pelicula => {
+                    const div = document.createElement('div');
+                    div.classList.add('movie');
+                    div.innerHTML = `
+                        <a href="${pelicula.link}">
+                            <img src="${pelicula.image}" alt="${pelicula.title}">
+                            <p>${pelicula.title}</p>
+                        </a>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            // Filtrar películas
+            function buscarPelicula() {
+                const search = document.getElementById('search').value.toLowerCase();
+                const peliculasFiltradas = peliculasOriginales.filter(pelicula =>
+                    pelicula.title.toLowerCase().includes(search)
+                );
+                mostrarPeliculas(peliculasFiltradas);
+            }
+
+            // Mostrar todas las películas inicialmente
+            mostrarPeliculas(peliculasOriginales);
+
+            // Función para mostrar/ocultar el menú desplegable
+            function toggleMenu() {
+                const menu = document.getElementById('menuDropdown');
+                menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            }
+        </script>
+
+    </div>
+
+</body>
+</html>
