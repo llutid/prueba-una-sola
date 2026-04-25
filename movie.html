@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>LLUTID+</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04040A;--surface:#0C0C16;--surface2:#141425;
+  --blue:#3B6EE8;--blue-glow:rgba(59,110,232,0.35);--blue-light:#5E8FFF;
+  --white:#F2F2F8;--muted:rgba(242,242,248,0.45);--border:rgba(255,255,255,0.07);
+  --card-radius:14px;--font-display:'Bebas Neue',cursive;--font-body:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;background:var(--bg);overflow-x:hidden}
+body{font-family:var(--font-body);color:var(--white);-webkit-font-smoothing:antialiased}
+
+/* ── LOADING SCREEN ── */
+#loadScreen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .5s ease}
+#loadScreen.hide{opacity:0;pointer-events:none}
+.load-logo{font-family:var(--font-display);font-size:42px;letter-spacing:4px;color:var(--white)}
+.load-logo span{color:var(--blue-light)}
+.load-bar{width:160px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.load-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-light));border-radius:2px;animation:loadAnim 1.4s ease-in-out infinite}
+@keyframes loadAnim{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}
+
+/* ── HEADER ── */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;display:flex;align-items:center;padding:0 16px;gap:14px;background:linear-gradient(to bottom,rgba(4,4,10,.92),transparent)}
+.back-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,transform .15s;flex-shrink:0}
+.back-btn:active{transform:scale(.9)}
+.back-btn svg{width:20px;height:20px}
+.header-logo{font-family:var(--font-display);font-size:22px;letter-spacing:2px;color:var(--white);text-decoration:none}
+.header-logo span{color:var(--blue-light)}
+
+/* ── HERO VIDEO (trailer) ── */
+.hero-wrap{position:relative;width:100%;padding-top:62%;background:#000;overflow:hidden}
+.hero-skeleton{position:absolute;inset:0;background:linear-gradient(110deg,#0c0c16 30%,#1a1a2e 50%,#0c0c16 70%);background-size:300% 100%;animation:sk 1.6s linear infinite}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.hero-vignette{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(4,4,10,.2) 0%,transparent 30%,transparent 40%,rgba(4,4,10,.7) 70%,rgba(4,4,10,1) 95%);pointer-events:none;z-index:2}
+.hero-side{position:absolute;inset:0;background:linear-gradient(to right,rgba(4,4,10,.4) 0%,transparent 40%,transparent 60%,rgba(4,4,10,.3) 100%);pointer-events:none;z-index:2}
+
+/* Mute hero */
+.hero-mute{position:absolute;top:72px;right:14px;z-index:10;width:36px;height:36px;border-radius:50%;background:rgba(4,4,10,.7);border:1.5px solid rgba(255,255,255,.22);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(8px)}
+.hero-mute svg{width:16px;height:16px}
+
+/* ── CONTENT ── */
+.content{position:relative;z-index:3;padding:0 20px 120px;margin-top:-28px}
+
+.badge-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.badge{background:var(--blue);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:4px 10px;border-radius:4px}
+.badge.genre{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)}
+
+.movie-title{font-family:var(--font-display);font-size:clamp(28px,8vw,48px);letter-spacing:1px;line-height:1.05;margin-bottom:10px;color:var(--white);text-shadow:0 2px 20px rgba(0,0,0,.8)}
+
+.meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.meta-item{font-size:13px;color:var(--muted);font-weight:500}
+.meta-sep{width:3px;height:3px;border-radius:50%;background:var(--muted)}
+.rating-pill{border:1px solid rgba(255,255,255,.25);padding:2px 8px;border-radius:4px;font-size:12px;color:rgba(255,255,255,.7);font-weight:600}
+
+/* ── BUTTONS ── */
+.btn-row{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 24px;border-radius:12px;font-family:var(--font-body);font-size:16px;font-weight:700;cursor:pointer;border:none;transition:transform .15s,opacity .2s;letter-spacing:.2px}
+.btn:active{transform:scale(.97)}
+.btn svg{width:20px;height:20px;flex-shrink:0}
+.btn-primary{background:#fff;color:#000;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+.btn-secondary{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(10px)}
+.btn-share{background:rgba(59,110,232,.15);color:var(--blue-light);border:1px solid rgba(59,110,232,.3)}
+
+/* ── DESCRIPTION ── */
+.section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.description{font-size:15px;line-height:1.65;color:rgba(242,242,248,.8);margin-bottom:24px}
+.desc-toggle{color:var(--blue-light);font-size:14px;font-weight:600;cursor:pointer;display:inline-block;margin-top:4px}
+
+/* ── DETAILS TABLE ── */
+.details-grid{display:flex;flex-direction:column;gap:0;border-radius:12px;overflow:hidden;background:var(--surface);border:1px solid var(--border);margin-bottom:24px}
+.detail-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-key{font-size:13px;color:var(--muted);font-weight:500}
+.detail-val{font-size:13px;color:var(--white);font-weight:600;text-align:right;max-width:60%}
+
+/* ── VIEW COUNTER ── */
+.view-counter{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--surface);border-radius:12px;border:1px solid var(--border);margin-bottom:24px}
+.view-counter svg{width:18px;height:18px;color:var(--blue-light)}
+.view-counter span{font-size:13px;color:var(--muted)}
+.view-counter strong{color:var(--white);font-weight:700}
+</style>
+</head>
+<body>
+
+<div id="loadScreen">
+  <div class="load-logo">LLUTID<span>+</span></div>
+  <div class="load-bar"><div class="load-bar-fill"></div></div>
+</div>
+
+<div id="mainContent" style="display:none">
+  <div class="header">
+    <button class="back-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <a href="admin.html" class="header-logo">LLUTID<span>+</span></a>
+  </div>
+
+  <div class="hero-wrap" id="heroWrap">
+    <div class="hero-skeleton" id="heroSkeleton"></div>
+    <video class="hero-video" id="heroVideo" autoplay muted loop playsinline></video>
+    <div class="hero-vignette"></div>
+    <div class="hero-side"></div>
+    <button class="hero-mute" id="heroMute">
+      <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <svg id="unmuteIcon" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    </button>
+  </div>
+
+  <div class="content">
+    <div class="badge-row">
+      <span class="badge" id="typeBadge">PELÍCULA</span>
+      <span class="badge genre" id="genreBadge" style="display:none"></span>
+    </div>
+
+    <h1 class="movie-title" id="movieTitle">Cargando...</h1>
+
+    <div class="meta-row">
+      <span class="meta-item" id="metaYear"></span>
+      <div class="meta-sep" id="metaSep1"></div>
+      <span class="rating-pill" id="metaRating"></span>
+      <div class="meta-sep" id="metaSep2"></div>
+      <span class="meta-item" id="metaDuration"></span>
+    </div>
+
+    <div class="view-counter" id="viewCounter" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span>Vistas hoy: <strong id="viewCount">0</strong></span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="playBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Ver película
+      </button>
+      <button class="btn btn-share" id="shareBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Compartir en WhatsApp
+      </button>
+    </div>
+
+    <p class="section-label">Sinopsis</p>
+    <div>
+      <p class="description" id="movieDesc">Cargando descripción...</p>
+    </div>
+
+    <p class="section-label">Detalles</p>
+    <div class="details-grid">
+      <div class="detail-row"><span class="detail-key">Año</span><span class="detail-val" id="detailYear">—</span></div>
+      <div class="detail-row"><span class="detail-key">Género</span><span class="detail-val" id="detailGenre">—</span></div>
+      <div class="detail-row"><span class="detail-key">Duración</span><span class="detail-val" id="detailDuration">—</span></div>
+      <div class="detail-row"><span class="detail-key">Clasificación</span><span class="detail-val" id="detailRating">—</span></div>
+      <div class="detail-row"><span class="detail-key">Idioma</span><span class="detail-val" id="detailLang">Español</span></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const fbConfig = {apiKey:"AIzaSyAKhAbmWzOH5CXn0QDbwnOlbG49Nr9q8kU",authDomain:"peliculas-88668.firebaseapp.com",projectId:"peliculas-88668",storageBucket:"peliculas-88668.firebasestorage.app",messagingSenderId:"475189564333",appId:"1:475189564333:web:7fe74613ca5082d3890724"};
+const fbConfigU = {apiKey:"AIzaSyBUaTunBig1_8LQgQmCND4Sm6m_s6E0FSs",authDomain:"llutid-18d26.firebaseapp.com",projectId:"llutid-18d26",storageBucket:"llutid-18d26.firebasestorage.app",messagingSenderId:"900505351564",appId:"1:900505351564:web:e71805939e3488170652a9"};
+
+const app = initializeApp(fbConfig);
+const db = getFirestore(app);
+const appU = initializeApp(fbConfigU,"usersM");
+const auth = getAuth(appU);
+
+const params = new URLSearchParams(location.search);
+const movieId = params.get('id');
+let movieData = null;
+let heroMuted = true;
+
+// ── Convertir URL de archive.org a mp4 directo ──
+function toDirectMp4(url) {
+  if (!url) return '';
+  // Si ya es un link directo de ia*.archive.org, úsalo tal cual
+  if (url.includes('ia') && url.includes('archive.org') && url.endsWith('.mp4')) return url;
+  // Si es /details/ → convertir a /download/
+  if (url.includes('archive.org/details/')) {
+    const id = url.split('/details/')[1].split('/')[0].split('?')[0];
+    return `https://archive.org/download/${id}/${id}.mp4`;
+  }
+  return url;
+}
+
+function $id(id){ return document.getElementById(id); }
+
+async function loadMovie() {
+  if (!movieId) { showError('No se especificó una película.'); return; }
+
+  try {
+    const snap = await getDoc(doc(db, 'movies', movieId));
+    if (!snap.exists()) { showError('Película no encontrada.'); return; }
+    movieData = { id: snap.id, ...snap.data() };
+    renderMovie(movieData);
+    registerView(movieData);
+  } catch(e) {
+    console.error(e);
+    showError('Error al cargar la película.');
+  }
+}
+
+function renderMovie(m) {
+  document.title = `${m.title || 'Película'} | LLUTID+`;
+
+  // Trailer (video hero)
+  const trailerUrl = toDirectMp4(m.trailerUrl || m.trailer || '');
+  const vid = $id('heroVideo');
+  if (trailerUrl) {
+    vid.src = trailerUrl;
+    vid.play().catch(()=>{});
+    $id('heroSkeleton').style.display = 'none';
+  }
+
+  // Título
+  $id('movieTitle').textContent = m.title || 'Sin título';
+
+  // Badge tipo
+  const type = (m.type || 'pelicula').toLowerCase();
+  $id('typeBadge').textContent = type === 'serie' ? 'SERIE' : 'PELÍCULA';
+
+  // Género badge
+  if (m.genre || m.section) {
+    $id('genreBadge').textContent = m.genre || sectionLabel(m.section);
+    $id('genreBadge').style.display = '';
+  }
+
+  // Meta
+  if (m.year) { $id('metaYear').textContent = m.year; $id('metaSep1').style.display=''; }
+  if (m.rating) { $id('metaRating').textContent = m.rating; $id('metaSep2').style.display=''; }
+  if (m.duration) $id('metaDuration').textContent = m.duration;
+
+  // Descripción
+  $id('movieDesc').textContent = m.description || m.desc || 'Sin descripción disponible.';
+
+  // Detalles
+  $id('detailYear').textContent = m.year || '—';
+  $id('detailGenre').textContent = m.genre || sectionLabel(m.section) || '—';
+  $id('detailDuration').textContent = m.duration || '—';
+  $id('detailRating').textContent = m.rating || '—';
+  $id('detailLang').textContent = m.lang || 'Español';
+
+  // Botón ver película
+  const playerUrl = `player.html?id=${movieId}`;
+  $id('playBtn').onclick = () => { location.href = playerUrl; };
+
+  // Vistas
+  const views = m.viewsToday || m.views || 0;
+  if (views > 0) {
+    $id('viewCount').textContent = views;
+    $id('viewCounter').style.display = 'flex';
+  }
+
+  // Compartir
+  $id('shareBtn').onclick = () => shareWhatsApp(m);
+
+  // Mute toggle
+  $id('heroMute').onclick = () => {
+    heroMuted = !heroMuted;
+    vid.muted = heroMuted;
+    $id('muteIcon').style.display = heroMuted ? '' : 'none';
+    $id('unmuteIcon').style.display = heroMuted ? 'none' : '';
+  };
+
+  // Mostrar contenido
+  $id('loadScreen').classList.add('hide');
+  $id('mainContent').style.display = 'block';
+  setTimeout(() => $id('loadScreen').remove(), 600);
+}
+
+function sectionLabel(sec) {
+  const map = { terror:'Terror / Suspenso', drama:'Drama', accion:'Acción / Crimen', animada:'Animada / Familiar', comedia:'Comedia', netflix:'Netflix', populares:'Popular', destacadas:'Destacada', top10:'Top 10' };
+  return map[sec] || sec || '';
+}
+
+// ── Registrar vista ──
+async function registerView(m) {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const viewRef = doc(db, 'movies', movieId);
+    // Incrementar contador total
+    await updateDoc(viewRef, { views: increment(1) });
+    // Guardar vista detallada
+    let userInfo = { uid: 'anon', email: 'anónimo' };
+    onAuthStateChanged(auth, async user => {
+      if (user) userInfo = { uid: user.uid, email: user.email };
+      try {
+        await addDoc(collection(db, 'views'), {
+          movieId, movieTitle: m.title,
+          date: today, timestamp: serverTimestamp(),
+          ...userInfo
+        });
+      } catch(e) {}
+    });
+  } catch(e) {}
+}
+
+function shareWhatsApp(m) {
+  const title = m.title || 'esta película';
+  const msg = `🎬 ¡Acabo de ver *${title}* en *LLUTID+* y es increíble! 🔥\n\n${m.description ? m.description.substring(0,120)+'...' : ''}\n\n📲 *Descarga LLUTID+ aquí:*\nhttps://apk.e-droid.net/apk/app3603927-me107o.apk?v=3\n\n🤖 *¿Necesitas ayuda?* Habla con nuestro bot:\nhttps://llutid.github.io/chat-bot-llutid-/\n📞 *Llámanos:* +57 3181087834`;
+  const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  if (navigator.share) {
+    navigator.share({ title: `LLUTID+ - ${title}`, text: msg }).catch(() => window.open(url, '_blank'));
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+function showError(msg) {
+  $id('loadScreen').classList.add('hide');
+  $id('mainContent').style.display = 'block';
+  $id('movieTitle').textContent = msg;
+  $id('movieDesc').textContent = 'Vuelve al inicio e intenta de nuevo.';
+  setTimeout(() => $id('loadScreen').remove(), 600);
+}
+
+loadMovie();
+</script>
+</body>
+</html>
